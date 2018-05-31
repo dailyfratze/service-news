@@ -40,11 +40,44 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
 		<java.version>10</java.version>
 		<lombok.version>1.16.22</lombok.version>
+		<java-autolinker.version>0.1.6</java-autolinker.version>
+		<java-oembed.version>0.5.1</java-oembed.version>
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>eu.michael-simons</groupId>
+			<artifactId>java-autolinker</artifactId>
+			<version>${java-autolinker.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.michael-simons</groupId>
+			<artifactId>java-oembed</artifactId>
+			<version>${java-oembed.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-simple</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>net.sf.ehcache</groupId>
+					<artifactId>ehcache-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-codec</groupId>
+					<artifactId>commons-codec</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>de.dailyfratze</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -64,6 +97,14 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
 		</dependency>
 
 		<dependency>

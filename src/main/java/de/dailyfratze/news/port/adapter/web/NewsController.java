@@ -25,6 +25,6 @@ import lombok.RequiredArgsConstructor;
  */
 @Controller
 @RequiredArgsConstructor
-public class NewsController {
+class NewsController {
 	private final PostService postService;
 }
