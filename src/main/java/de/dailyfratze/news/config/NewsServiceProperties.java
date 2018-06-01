@@ -16,6 +16,7 @@
 package de.dailyfratze.news.config;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@ConfigurationProperties
+@ConfigurationProperties(prefix = "news-service")
 public class NewsServiceProperties {
 
 	private Optional<String> baseURL;
@@ -57,7 +58,7 @@ public class NewsServiceProperties {
 		/**
 		 * The list of configured endpoints.
 		 */
-		private List<OembedEndpoint> endpoints;
+		private List<OembedEndpoint> endpoints = new ArrayList<>();
 
 		/**
 		 * A flag wether autodiscovery of oembed endpoints should be tried. Defaults
@@ -69,18 +70,30 @@ public class NewsServiceProperties {
 		 * The name of the cached used by this service. Defaults to
 		 * "ac.simons.oembed.OembedService".
 		 */
-		private Optional<String> cacheName;
+		private Optional<String> cacheName = Optional.empty();
 
 		/**
 		 * Time in seconds responses are cached. Used if the response has no
 		 * cache_age, defaults to 3600 (one hour).
 		 */
-		private Optional<Integer> defaultCacheAge;
+		private Optional<Integer> defaultCacheAge = Optional.empty();
 	}
 
-	private PostRendererProperties postRenderer;
+	@Getter
+	@Setter
+	public static class HttpClientProperties {
+		/**
+		 * A flag wether the <em>Daily Fratze</em> wide http client should ignore
+		 * cookies or not.
+		 */
+		private boolean ignoreCookies = false;
+	}
 
-	private AutoLinkerProperties autoLinker;
+	private PostRendererProperties postRenderer = new PostRendererProperties();
 
-	private OembedProperties oembed;
+	private AutoLinkerProperties autoLinker = new AutoLinkerProperties();
+
+	private OembedProperties oembed = new OembedProperties();
+
+	private HttpClientProperties httpClient = new HttpClientProperties();
 }

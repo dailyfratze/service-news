@@ -38,7 +38,7 @@ class PostRenderer {
 		this.baseUrl = newsServiceProperties.getBaseURL();
 	}
 
-	@Cacheable(cacheNames = "renderedPosts", key = "#post.id")
+	@Cacheable(cacheNames = "texts.rendered-posts", key = "#post.id")
 	public String render(final Post post) {
 		return postFilterChain.apply(post.toString(), baseUrl);
 	}

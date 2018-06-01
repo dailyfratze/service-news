@@ -41,7 +41,6 @@ import net.sf.ehcache.CacheManager;
  * @author Michael J. Simons, 2018-05-31
  */
 @Configuration
-@RequiredArgsConstructor
 class PostRendererConfig {
 	@Bean
 	AutoLinkService autoLinkService(final NewsServiceProperties newsServiceProperties) {
@@ -65,7 +64,7 @@ class PostRendererConfig {
 	}
 
 	@Bean
-	public TextFilter postFilterChain(
+	TextFilter postFilterChain(
 			final NewsServiceProperties newsServiceProperties,
 			final ResourceLoader resourceLoader,
 			final AutoLinkService autoLinkService,
