@@ -15,11 +15,15 @@
  */
 package de.dailyfratze.news.port.adapter.persistence;
 
-import org.springframework.stereotype.Repository;
-
+import de.dailyfratze.news.domain.model.Post;
 import de.dailyfratze.news.domain.model.PostRepository;
+import de.dailyfratze.news.port.adapter.persistence.jpa.PostEntity;
 import de.dailyfratze.news.port.adapter.persistence.jpa.PostEntityDao;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.OffsetDateTime;
 
 /**
  * @author Michael J. Simons, 2018-05-31
@@ -28,4 +32,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepository {
 	private final PostEntityDao postEntityDao;
+
+	@Override
+	@Transactional
+	public void save(final Post post) {
+		final OffsetDateTime createdAt = post.getCreatedAt().toOffsetDateTime();
+		final String createdBy = post.getCreatedBy();
+
+		this.postEntityDao.findByCreatedAtAndAndCreatedBy(createdAt, createdBy).ifPresentOrElse(
+			existingPost -> existingPost.updateWith(post),
+			() -> this.postEntityDao.save(new PostEntity(post.getContent(), createdAt, createdBy))
+		);
+	}
 }

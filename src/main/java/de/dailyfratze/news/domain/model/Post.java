@@ -15,8 +15,24 @@
  */
 package de.dailyfratze.news.domain.model;
 
+import lombok.Builder;
+import lombok.Getter;
+
+import java.time.ZonedDateTime;
+
 /**
  * @author Michael J. Simons, 2018-05-31
  */
+@Builder
+@Getter
 public class Post {
+	private final String content;
+
+	private final ZonedDateTime createdAt;
+
+	private final String createdBy;
+
+	private final ZonedDateTime updatedAt;
+
+	private final String updatedBy;
 }

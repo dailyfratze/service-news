@@ -17,8 +17,19 @@ package de.dailyfratze.news.port.adapter.persistence.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.OffsetDateTime;
+import java.util.Optional;
+
 /**
  * @author Michael J. Simons, 2018-05-31
  */
 public interface PostEntityDao extends JpaRepository<PostEntity, Integer> {
+	/**
+	 * Retrieves post by unique key.
+	 *
+	 * @param createdAt
+	 * @param createdBy
+	 * @return
+	 */
+	Optional<PostEntity> findByCreatedAtAndAndCreatedBy(OffsetDateTime createdAt, String createdBy);
 }

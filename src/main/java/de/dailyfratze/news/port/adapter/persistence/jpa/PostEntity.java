@@ -32,6 +32,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 
+import de.dailyfratze.news.domain.model.Post;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -65,7 +66,6 @@ public class PostEntity implements Serializable {
 	@Column(nullable = false, columnDefinition = "text")
 	@Lob
 	@Basic(fetch = FetchType.EAGER)
-	@Setter
 	private String content;
 
 	// See reasoning about LocalDateTime, OffsetDateTime and ZonedDateTime here:
@@ -79,11 +79,9 @@ public class PostEntity implements Serializable {
 	private String createdBy;
 
 	@Column(name = "updated_at", nullable = false)
-	@Setter
 	private OffsetDateTime updatedAt;
 
 	@Column(name = "updated_by", nullable = false)
-	@Setter
 	private String updatedBy;
 
 	/**
@@ -96,5 +94,11 @@ public class PostEntity implements Serializable {
 		this.content = content;
 		this.createdAt = this.updatedAt = createdAt;
 		this.createdBy = this.updatedBy = createdBy;
+	}
+
+	public void updateWith(final Post post) {
+		this.content = post.getContent();
+		this.updatedAt = post.getUpdatedAt().toOffsetDateTime();
+		this.updatedBy = post.getUpdatedBy();
 	}
 }

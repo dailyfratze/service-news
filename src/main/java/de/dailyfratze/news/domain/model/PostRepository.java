@@ -19,4 +19,5 @@ package de.dailyfratze.news.domain.model;
  * @author Michael J. Simons, 2018-05-31
  */
 public interface PostRepository {
+	void save(Post post);
 }
