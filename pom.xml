@@ -43,7 +43,7 @@
 
 		<java.version>10</java.version>
 		<lombok.version>1.16.22</lombok.version>
-		<java-autolinker.version>0.1.6</java-autolinker.version>
+		<java-autolinker.version>0.2.1</java-autolinker.version>
 		<java-oembed.version>0.6.2</java-oembed.version>
 	</properties>
 
@@ -52,12 +52,6 @@
 			<groupId>eu.michael-simons</groupId>
 			<artifactId>java-autolinker</artifactId>
 			<version>${java-autolinker.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.jsoup</groupId>
-					<artifactId>jsoup</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>eu.michael-simons</groupId>
