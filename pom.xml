@@ -44,8 +44,7 @@
 		<java.version>10</java.version>
 		<lombok.version>1.16.22</lombok.version>
 		<java-autolinker.version>0.1.6</java-autolinker.version>
-		<java-oembed.version>0.5.1</java-oembed.version>
-		<javax-activation.version>1.1.1</javax-activation.version>
+		<java-oembed.version>0.6.2</java-oembed.version>
 	</properties>
 
 	<dependencies>
@@ -53,6 +52,12 @@
 			<groupId>eu.michael-simons</groupId>
 			<artifactId>java-autolinker</artifactId>
 			<version>${java-autolinker.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.jsoup</groupId>
+					<artifactId>jsoup</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>eu.michael-simons</groupId>
@@ -62,14 +67,6 @@
 				<exclusion>
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-simple</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>net.sf.ehcache</groupId>
-					<artifactId>ehcache-core</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>commons-codec</groupId>
-					<artifactId>commons-codec</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -102,26 +99,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache</artifactId>
-		</dependency>
-
-		<!-- I hate this! -->
-		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jaxb</groupId>
-			<artifactId>jaxb-runtime</artifactId>
-			<version>${javax-jaxb.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.activation</groupId>
-			<artifactId>activation</artifactId>
-			<version>${javax-activation.version}</version>
 		</dependency>
 
 		<dependency>
@@ -178,6 +155,26 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>enforce</id>
+						<configuration>
+							<rules>
+								<DependencyConvergence />
+								<requireMavenVersion>
+									<version>3.5.3</version>
+								</requireMavenVersion>
+							</rules>
+						</configuration>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<phase>validate</phase>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
