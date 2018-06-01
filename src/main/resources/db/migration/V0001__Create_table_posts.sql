@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-create table news_posts (
+create table sn_posts (
   id                 serial primary key,
   content            text not null,
   created_at         timestamp with time zone not null,

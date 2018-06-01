@@ -17,25 +17,31 @@ package de.dailyfratze.news.port.adapter.persistence.jpa;
 
 import java.io.Serializable;
 
+import javax.persistence.Basic;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author Michael J. Simons, 2018-05-31
  */
 @Entity
-@Table(name = "posts")
+@Table(name = "sn_posts")
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
@@ -46,4 +52,14 @@ public class PostEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(precision = 8)
 	private Integer id;
+
+	/**
+	 * Content of this posts.
+	 */
+	@Column(nullable = false, columnDefinition = "text")
+	@Lob
+	@Basic(fetch = FetchType.EAGER)
+	@Getter
+	@Setter
+	private String content;
 }
