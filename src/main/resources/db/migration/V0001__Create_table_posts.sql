@@ -21,5 +21,5 @@ create table sn_posts (
   created_by         varchar(32) not null,
   updated_at         timestamp with time zone not null,
   updated_by         varchar(32) not null,
-  CONSTRAINT posts_uk UNIQUE (created_at, created_by)
+  CONSTRAINT sn_posts_uk UNIQUE (created_at, created_by)
 );
