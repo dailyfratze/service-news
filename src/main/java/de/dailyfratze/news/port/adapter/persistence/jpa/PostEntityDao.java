@@ -15,10 +15,10 @@
  */
 package de.dailyfratze.news.port.adapter.persistence.jpa;
 
+import org.hibernate.query.Query;
 import org.hibernate.type.OffsetDateTimeType;
 import org.hibernate.type.StringType;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.Nullable;
 
 import java.time.OffsetDateTime;
@@ -99,7 +99,7 @@ class PostEntityDaoNativeImpl implements PostEntityDaoNative {
 				+ " LIMIT :limit";
 
 		@SuppressWarnings("unchecked")
-		final org.hibernate.query.Query<PostEntity> query = entityManager.createNativeQuery(sql, PostEntity.class).unwrap(org.hibernate.query.Query.class);
+		final Query<PostEntity> query = entityManager.createNativeQuery(sql, PostEntity.class).unwrap(Query.class);
 		return query
 				.setParameter("created_at", createdAt, OffsetDateTimeType.INSTANCE)
 				.setParameter("created_by", createdBy, StringType.INSTANCE)
