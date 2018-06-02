@@ -15,12 +15,17 @@
  */
 package de.dailyfratze.news;
 
+import java.time.OffsetDateTime;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
 
 import de.dailyfratze.news.config.NewsServiceProperties;
+import de.dailyfratze.news.port.adapter.persistence.jpa.PostEntityDao;
 
 /**
  * @author Michael J. Simons, 2018-05-31
@@ -28,9 +33,20 @@ import de.dailyfratze.news.config.NewsServiceProperties;
 @SpringBootApplication
 @EnableConfigurationProperties(NewsServiceProperties.class)
 @EnableCaching
-public class NewsServiceApplication {
+public class NewsServiceApplication implements CommandLineRunner {
+
+	@Autowired
+	PostEntityDao postEntityDao;
+
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(NewsServiceApplication.class, args);
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
+		postEntityDao.findAll(5, OffsetDateTime.now(), null).forEach(System.out::println);
+
 	}
 }

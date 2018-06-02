@@ -15,9 +15,13 @@
  */
 package de.dailyfratze.news.domain.model;
 
+import java.util.List;
+
 /**
  * @author Michael J. Simons, 2018-05-31
  */
 public interface PostRepository {
 	void save(Post post);
+
+	List<Post> findAll(int limit, Post seekTo);
 }

@@ -15,15 +15,25 @@
  */
 package de.dailyfratze.news.port.adapter.persistence;
 
+import static java.util.stream.Collectors.toList;
+
 import de.dailyfratze.news.domain.model.Post;
 import de.dailyfratze.news.domain.model.PostRepository;
 import de.dailyfratze.news.port.adapter.persistence.jpa.PostEntity;
 import de.dailyfratze.news.port.adapter.persistence.jpa.PostEntityDao;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import javax.validation.constraints.Null;
 
 /**
  * @author Michael J. Simons, 2018-05-31
@@ -43,5 +53,24 @@ public class PostRepositoryImpl implements PostRepository {
 			existingPost -> existingPost.updateWith(post),
 			() -> this.postEntityDao.save(new PostEntity(post.getContent(), createdAt, createdBy))
 		);
+	}
+
+	@Override
+	public List<Post> findAll(final int limit, @Nullable final Post seekTo) {
+		var hlp = Optional.ofNullable(seekTo);
+		return this.postEntityDao.findAll(
+				limit,
+				hlp.map(Post::getCreatedAt).map(ZonedDateTime::toOffsetDateTime).orElse(null),
+				hlp.map(Post::getCreatedBy).orElse(null)
+		).stream()
+				.map(p -> Post.builder()
+						.createdBy(p.getCreatedBy())
+						.createdAt(p.getCreatedAt().toZonedDateTime()) // TODO use correct zone
+						.updatedBy(p.getUpdatedBy())
+						.updatedAt(p.getUpdatedAt().toZonedDateTime())
+						.content(p.getContent())
+						.build())
+				.collect(toList());
+
 	}
 }
