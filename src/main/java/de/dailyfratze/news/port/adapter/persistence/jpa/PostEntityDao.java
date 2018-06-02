@@ -83,7 +83,7 @@ class PostEntityDaoNativeImpl implements PostEntityDaoNative {
 	 * 	</li>
 	 * </ol>
 	 *
-	 * Wasted another hour and a half of my life for triviality.
+	 * Wasted another 2 hours of my life for triviality.
 	 *
 	 * @param limit
 	 * @param createdAt
@@ -101,8 +101,8 @@ class PostEntityDaoNativeImpl implements PostEntityDaoNative {
 		@SuppressWarnings("unchecked")
 		final org.hibernate.query.Query<PostEntity> query = entityManager.createNativeQuery(sql, PostEntity.class).unwrap(org.hibernate.query.Query.class);
 		return query
-				.setParameter("created_at", null, OffsetDateTimeType.INSTANCE)
-				.setParameter("created_by", null, StringType.INSTANCE)
+				.setParameter("created_at", createdAt, OffsetDateTimeType.INSTANCE)
+				.setParameter("created_by", createdBy, StringType.INSTANCE)
 				.setParameter("limit", limit)
 				.getResultList();
 	}
