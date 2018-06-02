@@ -15,23 +15,35 @@
  */
 package de.dailyfratze.news.application;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import de.dailyfratze.news.domain.model.Post;
-import de.dailyfratze.news.domain.model.PostRepository;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * @author Michael J. Simons, 2018-05-31
+ * @author Michael J. Simons, 2018-06-02
  */
-@Service
+@Getter
 @RequiredArgsConstructor
-public class PostService {
-	private final PostRepository postRepository;
+@Builder(builderMethodName = "fetch")
+public final class FetchPostsCommand {
 
-	public List<Post> fetchPosts(final FetchPostsCommand cmd) {
-		throw new UnsupportedOperationException("N/A");
+	/**
+	 * @param atMostNPosts
+	 * @return A builder to fetch at most n posts.
+	 */
+	public static FetchPostsCommandBuilder fetch(final int atMostNPosts) {
+		return new FetchPostsCommandBuilder().numberToFetch(atMostNPosts);
 	}
+
+	/**
+	 * Maximum number of posts to fetch.
+	 */
+	private final int numberToFetch;
+
+	/**
+	 * Optional last post that was fetched. If set, seek to that post and return {@link #numberToFetch}-posts
+	 * from there on.
+	 */
+	private final Post lastFetchedPost;
 }
