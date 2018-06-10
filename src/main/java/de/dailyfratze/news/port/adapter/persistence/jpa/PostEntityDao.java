@@ -40,7 +40,7 @@ public interface PostEntityDao extends JpaRepository<PostEntity, Integer>, PostE
 	 * @param createdBy
 	 * @return
 	 */
-	Optional<PostEntity> findByCreatedAtAndAndCreatedBy(OffsetDateTime createdAt, String createdBy);
+	Optional<PostEntity> findByCreatedAtAndCreatedBy(OffsetDateTime createdAt, String createdBy);
 }
 
 interface PostEntityDaoNative {

@@ -49,7 +49,7 @@ public class PostRepositoryImpl implements PostRepository {
 		final OffsetDateTime createdAt = post.getCreatedAt().toOffsetDateTime();
 		final String createdBy = post.getCreatedBy();
 
-		this.postEntityDao.findByCreatedAtAndAndCreatedBy(createdAt, createdBy).ifPresentOrElse(
+		this.postEntityDao.findByCreatedAtAndCreatedBy(createdAt, createdBy).ifPresentOrElse(
 			existingPost -> existingPost.updateWith(post),
 			() -> this.postEntityDao.save(new PostEntity(post.getContent(), createdAt, createdBy))
 		);
