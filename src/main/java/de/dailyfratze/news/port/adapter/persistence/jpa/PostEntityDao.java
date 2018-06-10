@@ -15,19 +15,17 @@
  */
 package de.dailyfratze.news.port.adapter.persistence.jpa;
 
-import org.hibernate.query.Query;
-import org.hibernate.type.OffsetDateTimeType;
-import org.hibernate.type.StringType;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.lang.Nullable;
-
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
-import lombok.RequiredArgsConstructor;
+import org.hibernate.query.Query;
+import org.hibernate.type.OffsetDateTimeType;
+import org.hibernate.type.StringType;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.lang.Nullable;
 
 /**
  * @author Michael J. Simons, 2018-05-31
@@ -55,9 +53,12 @@ interface PostEntityDaoNative {
 	List<PostEntity> findAll(int limit, @Nullable OffsetDateTime createdAt, @Nullable String createdBy);
 }
 
-@RequiredArgsConstructor
 class PostEntityDaoNativeImpl implements PostEntityDaoNative {
 	private final EntityManager entityManager;
+
+	PostEntityDaoNativeImpl(final EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
 
 	/**
 	 * Here we see the beauty of JPA in action:

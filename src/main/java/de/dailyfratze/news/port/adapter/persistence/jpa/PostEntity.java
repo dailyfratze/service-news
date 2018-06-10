@@ -17,7 +17,7 @@ package de.dailyfratze.news.port.adapter.persistence.jpa;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
-import java.util.Optional;
+import java.util.Objects;
 
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
@@ -30,17 +30,11 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotBlank;
 
-import de.dailyfratze.news.domain.model.Post;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import de.dailyfratze.news.domain.model.Post;
 
 /**
  * @author Michael J. Simons, 2018-05-31
@@ -51,9 +45,6 @@ import lombok.Setter;
 	uniqueConstraints = @UniqueConstraint(name = "sn_posts_uk", columnNames = {"created_at", "created_by"}))
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
-@Getter
-@EqualsAndHashCode(of = {"createdAt", "createdBy"})
 public class PostEntity implements Serializable {
 	private static final long serialVersionUID = 8762443218410015743L;
 
@@ -86,6 +77,9 @@ public class PostEntity implements Serializable {
 	@Column(name = "updated_by", nullable = false)
 	private String updatedBy;
 
+	PostEntity() {
+	}
+
 	/**
 	 * Creates a new post, updated* will be equal to created*
 	 * @param content
@@ -102,5 +96,43 @@ public class PostEntity implements Serializable {
 		this.content = post.getContent();
 		this.updatedAt = post.getUpdatedAt().toOffsetDateTime();
 		this.updatedBy = post.getUpdatedBy();
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public OffsetDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public OffsetDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof PostEntity)) {
+			return false;
+		}
+		final PostEntity that = (PostEntity) o;
+		return Objects.equals(createdAt, that.createdAt) &&
+				Objects.equals(createdBy, that.createdBy);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(createdAt, createdBy);
 	}
 }

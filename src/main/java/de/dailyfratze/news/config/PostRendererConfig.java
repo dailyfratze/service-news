@@ -34,7 +34,6 @@ import de.dailyfratze.commons.text.TextFilter;
 import de.dailyfratze.commons.text.TextileFilter;
 import de.dailyfratze.news.config.NewsServiceProperties.AutoLinkerProperties;
 import de.dailyfratze.news.config.NewsServiceProperties.OembedProperties;
-import lombok.RequiredArgsConstructor;
 import net.sf.ehcache.CacheManager;
 
 /**

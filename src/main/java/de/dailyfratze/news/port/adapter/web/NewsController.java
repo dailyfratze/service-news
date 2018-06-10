@@ -15,16 +15,35 @@
  */
 package de.dailyfratze.news.port.adapter.web;
 
-import org.springframework.stereotype.Controller;
+import java.time.ZonedDateTime;
+import java.util.Map;
+import java.util.Optional;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import de.dailyfratze.news.application.FetchPostsCommand;
 import de.dailyfratze.news.application.PostService;
-import lombok.RequiredArgsConstructor;
 
 /**
  * @author Michael J. Simons, 2018-05-31
  */
 @Controller
-@RequiredArgsConstructor
 class NewsController {
 	private final PostService postService;
+
+	public NewsController(final PostService postService) {
+		this.postService = postService;
+	}
+
+	@GetMapping({"", "/", "/news"})
+	public ModelAndView index(
+
+	) {
+		// Map.of("posts", this.postService.fetchPosts(fetchPosts.orElseGet(() -> new FetchPostsCommand(5, null))))
+		return new ModelAndView("index", Map.of());
+	}
 }

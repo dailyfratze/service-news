@@ -15,7 +15,9 @@
  */
 package de.dailyfratze.news.domain.model;
 
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Michael J. Simons, 2018-05-31
@@ -23,5 +25,54 @@ import java.util.List;
 public interface PostRepository {
 	void save(Post post);
 
-	List<Post> findAll(int limit, Post seekTo);
+	List<Post> findAll(int limit, Position seekTo);
+
+	/**
+	 * This value object represents a position in the list of posts
+	 * ordered by date of creation and by author.
+	 */
+	class Position {
+		private final ZonedDateTime createdAt;
+
+		private final String createdBy;
+
+		public Position(final ZonedDateTime createdAt, final String createdBy) {
+			this.createdAt = Objects.requireNonNull(createdAt, "Date of creation is required.");
+			this.createdBy = Objects.requireNonNull(createdBy, "Creator is required.");
+		}
+
+		public ZonedDateTime getCreatedAt() {
+			return createdAt;
+		}
+
+		public String getCreatedBy() {
+			return createdBy;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (!(o instanceof Position)) {
+				return false;
+			}
+			final Position position = (Position) o;
+			return Objects.equals(createdAt, position.createdAt) &&
+					Objects.equals(createdBy, position.createdBy);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(createdAt, createdBy);
+		}
+
+		@Override
+		public String toString() {
+			return "Position{" +
+					"createdAt=" + createdAt +
+					", createdBy='" + createdBy + '\'' +
+					'}';
+		}
+	}
 }

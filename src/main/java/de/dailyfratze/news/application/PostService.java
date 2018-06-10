@@ -21,17 +21,19 @@ import org.springframework.stereotype.Service;
 
 import de.dailyfratze.news.domain.model.Post;
 import de.dailyfratze.news.domain.model.PostRepository;
-import lombok.RequiredArgsConstructor;
 
 /**
  * @author Michael J. Simons, 2018-05-31
  */
 @Service
-@RequiredArgsConstructor
 public class PostService {
 	private final PostRepository postRepository;
 
+	public PostService(PostRepository postRepository) {
+		this.postRepository = postRepository;
+	}
+
 	public List<Post> fetchPosts(final FetchPostsCommand cmd) {
-		throw new UnsupportedOperationException("N/A");
+		return this.postRepository.findAll(cmd.getNumberToFetch(), cmd.getSeekTo());
 	}
 }

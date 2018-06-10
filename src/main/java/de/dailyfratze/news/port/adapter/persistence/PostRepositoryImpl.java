@@ -17,31 +17,34 @@ package de.dailyfratze.news.port.adapter.persistence;
 
 import static java.util.stream.Collectors.toList;
 
-import de.dailyfratze.news.domain.model.Post;
-import de.dailyfratze.news.domain.model.PostRepository;
-import de.dailyfratze.news.port.adapter.persistence.jpa.PostEntity;
-import de.dailyfratze.news.port.adapter.persistence.jpa.PostEntityDao;
-import lombok.RequiredArgsConstructor;
-
-import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import javax.validation.constraints.Null;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import de.dailyfratze.news.domain.model.Post;
+import de.dailyfratze.news.domain.model.PostRepository;
+import de.dailyfratze.news.port.adapter.persistence.jpa.PostEntity;
+import de.dailyfratze.news.port.adapter.persistence.jpa.PostEntityDao;
 
 /**
  * @author Michael J. Simons, 2018-05-31
  */
 @Repository
-@RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepository {
+	private final ZoneId targetTimeZone;
+
 	private final PostEntityDao postEntityDao;
+
+	public PostRepositoryImpl(ZoneId targetTimeZone, PostEntityDao postEntityDao) {
+		this.targetTimeZone = targetTimeZone;
+		this.postEntityDao = postEntityDao;
+	}
 
 	@Override
 	@Transactional
@@ -56,21 +59,21 @@ public class PostRepositoryImpl implements PostRepository {
 	}
 
 	@Override
-	public List<Post> findAll(final int limit, @Nullable final Post seekTo) {
+	public List<Post> findAll(final int limit, @Nullable final Position seekTo) {
 		var hlp = Optional.ofNullable(seekTo);
 		return this.postEntityDao.findAll(
 				limit,
-				hlp.map(Post::getCreatedAt).map(ZonedDateTime::toOffsetDateTime).orElse(null),
-				hlp.map(Post::getCreatedBy).orElse(null)
+				hlp.map(Position::getCreatedAt).map(ZonedDateTime::toOffsetDateTime).orElse(null),
+				hlp.map(Position::getCreatedBy).orElse(null)
 		).stream()
-				.map(p -> Post.builder()
-						.createdBy(p.getCreatedBy())
-						.createdAt(p.getCreatedAt().toZonedDateTime()) // TODO use correct zone
-						.updatedBy(p.getUpdatedBy())
-						.updatedAt(p.getUpdatedAt().toZonedDateTime())
-						.content(p.getContent())
-						.build())
+				.map(this::toPost)
 				.collect(toList());
+	}
 
+	Post toPost(final PostEntity entity) {
+		return Post.builder().apply(builder -> builder
+				.content(entity.getContent())
+				.createdAt(entity.getCreatedAt().atZoneSameInstant(targetTimeZone)).by(entity.getCreatedBy())
+				.updatedAt(entity.getUpdatedAt().atZoneSameInstant(targetTimeZone)).by(entity.getUpdatedBy()));
 	}
 }
