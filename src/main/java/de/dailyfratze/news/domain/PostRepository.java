@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.dailyfratze.news.port.adapter.persistence.jpa;
+package de.dailyfratze.news.domain;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -21,16 +21,19 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
+import lombok.RequiredArgsConstructor;
 import org.hibernate.query.Query;
 import org.hibernate.type.OffsetDateTimeType;
 import org.hibernate.type.StringType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.Nullable;
 
+import static lombok.AccessLevel.PACKAGE;
+
 /**
  * @author Michael J. Simons, 2018-05-31
  */
-public interface PostEntityDao extends JpaRepository<PostEntity, Integer>, PostEntityDaoNative {
+interface PostRepository extends JpaRepository<Post, Integer>, PostRepositoryNativeExt {
 	/**
 	 * Retrieves post by unique key.
 	 *
@@ -38,10 +41,10 @@ public interface PostEntityDao extends JpaRepository<PostEntity, Integer>, PostE
 	 * @param createdBy
 	 * @return
 	 */
-	Optional<PostEntity> findByCreatedAtAndCreatedBy(OffsetDateTime createdAt, String createdBy);
+	Optional<Post> findByCreatedAtAndCreatedBy(OffsetDateTime createdAt, String createdBy);
 }
 
-interface PostEntityDaoNative {
+interface PostRepositoryNativeExt {
 	/**
 	 * Retrieves the last n posts in order by creation date.
 	 *
@@ -50,15 +53,12 @@ interface PostEntityDaoNative {
 	 * @param createdBy
 	 * @return
 	 */
-	List<PostEntity> findAll(int limit, @Nullable OffsetDateTime createdAt, @Nullable String createdBy);
+	List<Post> findAll(int limit, @Nullable OffsetDateTime createdAt, @Nullable String createdBy);
 }
 
-class PostEntityDaoNativeImpl implements PostEntityDaoNative {
+@RequiredArgsConstructor(access = PACKAGE)
+class PostRepositoryNativeExtImpl implements PostRepositoryNativeExt {
 	private final EntityManager entityManager;
-
-	PostEntityDaoNativeImpl(final EntityManager entityManager) {
-		this.entityManager = entityManager;
-	}
 
 	/**
 	 * Here we see the beauty of JPA in action:
@@ -92,7 +92,7 @@ class PostEntityDaoNativeImpl implements PostEntityDaoNative {
 	 * @return
 	 */
 	@Override
-	public List<PostEntity> findAll(final int limit, @Nullable final OffsetDateTime createdAt, @Nullable final String createdBy) {
+	public List<Post> findAll(final int limit, @Nullable final OffsetDateTime createdAt, @Nullable final String createdBy) {
 		var sql = "SELECT * FROM sn_posts p "
 				+ " WHERE (CAST(:created_at AS timestamp with time zone) IS NULL AND :created_by IS NULL) "
 				+ "    OR (p.created_at, p.created_by) < (:created_at, :created_by) "
@@ -100,7 +100,7 @@ class PostEntityDaoNativeImpl implements PostEntityDaoNative {
 				+ " LIMIT :limit";
 
 		@SuppressWarnings("unchecked")
-		final Query<PostEntity> query = entityManager.createNativeQuery(sql, PostEntity.class).unwrap(Query.class);
+		final Query<Post> query = entityManager.createNativeQuery(sql, Post.class).unwrap(Query.class);
 		return query
 				.setParameter("created_at", createdAt, OffsetDateTimeType.INSTANCE)
 				.setParameter("created_by", createdBy, StringType.INSTANCE)

@@ -13,36 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.dailyfratze.news.port.adapter.web;
+package de.dailyfratze.news.app;
 
-import java.time.ZonedDateTime;
+import de.dailyfratze.news.domain.Post;
+import de.dailyfratze.news.domain.PostService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.ModelAndView;
+
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-
-import de.dailyfratze.news.application.FetchPostsCommand;
-import de.dailyfratze.news.application.PostService;
+import static lombok.AccessLevel.PACKAGE;
 
 /**
  * @author Michael J. Simons, 2018-05-31
  */
 @Controller
-class NewsController {
+@RequiredArgsConstructor(access = PACKAGE)
+class PostController {
+
 	private final PostService postService;
 
-	public NewsController(final PostService postService) {
-		this.postService = postService;
-	}
-
 	@GetMapping({"", "/", "/news"})
-	public ModelAndView index(
-
-	) {
+	public ModelAndView index(final FetchPostsCommand fetchPosts, Optional<Post> post) {
+		System.out.println(fetchPosts);
+		System.out.println("post " + post);
+		postService.fetchPosts(23, null);
 		// Map.of("posts", this.postService.fetchPosts(fetchPosts.orElseGet(() -> new FetchPostsCommand(5, null))))
 		return new ModelAndView("index", Map.of());
 	}

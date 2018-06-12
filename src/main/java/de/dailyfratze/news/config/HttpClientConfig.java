@@ -17,7 +17,7 @@ package de.dailyfratze.news.config;
 
 import java.nio.charset.StandardCharsets;
 
-import org.apache.http.client.HttpClient;
+import de.dailyfratze.news.NewsServiceProperties;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.ConnectionConfig;

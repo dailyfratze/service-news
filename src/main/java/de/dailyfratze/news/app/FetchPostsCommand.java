@@ -13,10 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.dailyfratze.news.application;
+package de.dailyfratze.news.app;
+
+import de.dailyfratze.news.domain.Post;
+import lombok.Value;
+
+import javax.validation.constraints.NotNull;
+import java.util.Optional;
 
 /**
- * @author Michael J. Simons, 2018-05-31
+ * @author Michael J. Simons, 2018-06-02
  */
-public class NewPostCommand {
+@Value
+public final class FetchPostsCommand {
+
+	/**
+	 * Maximum number of posts to fetch.
+	 */
+	@NotNull
+	private final Integer numberToFetch;
+
+	/**
+	 * Optional id of the last post that was fetched. If set, seek to that post and return {@link #numberToFetch}-posts
+	 * from there on.
+	 */
+	private final Optional<Post> seekTo;
 }

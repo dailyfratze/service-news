@@ -13,35 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.dailyfratze.news.config;
+package de.dailyfratze.news.app;
 
-import java.time.ZoneId;
-
+import de.dailyfratze.news.domain.PostService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import de.dailyfratze.news.port.adapter.serialization.json.CommandsModule;
+import java.util.List;
 
 /**
- * Configures several beans and aspects of the the news-service.
- * @author Michael J. Simons, 2018-06-10
+ * @author Michael J. Simons, 2018-06-12
  */
 @Configuration
-public class NewsServiceConfig {
-	private final NewsServiceProperties newsServiceProperties;
-
-	public NewsServiceConfig(final NewsServiceProperties newsServiceProperties) {
-		this.newsServiceProperties = newsServiceProperties;
-	}
-
+public class WebConfig {
 	@Bean
-	public ZoneId targetTimeZone() {
-		return this.newsServiceProperties.getTargetTimeZone();
-	}
-
-	@Bean
-	public CommandsModule commandsModule() {
-		return new CommandsModule();
+	public WebMvcConfigurer webMvcConfigurer(final PostService postService) {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+				resolvers.add(new FetchPostsCommandArgumentResolver(postService));
+			}
+		};
 	}
 }

@@ -13,27 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.dailyfratze.news.application;
-
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
-import de.dailyfratze.news.domain.model.Post;
-import de.dailyfratze.news.domain.model.PostRepository;
+package de.dailyfratze.news.app;
 
 /**
  * @author Michael J. Simons, 2018-05-31
  */
-@Service
-public class PostService {
-	private final PostRepository postRepository;
-
-	public PostService(PostRepository postRepository) {
-		this.postRepository = postRepository;
-	}
-
-	public List<Post> fetchPosts(final FetchPostsCommand cmd) {
-		return this.postRepository.findAll(cmd.getNumberToFetch(), cmd.getSeekTo());
-	}
+public class DeletePostCommand {
 }

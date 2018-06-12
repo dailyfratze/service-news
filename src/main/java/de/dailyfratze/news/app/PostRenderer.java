@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.dailyfratze.news.port.adapter.web;
-
-import java.util.Optional;
-
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Component;
+package de.dailyfratze.news.app;
 
 import de.dailyfratze.commons.text.TextFilter;
-import de.dailyfratze.news.config.NewsServiceProperties;
-import de.dailyfratze.news.domain.model.Post;
+import de.dailyfratze.news.NewsServiceProperties;
+import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 /**
  * @author Michael J. Simons, 2018-05-31
@@ -38,8 +35,10 @@ class PostRenderer {
 		this.baseUrl = newsServiceProperties.getBaseURL();
 	}
 
+	/*
 	@Cacheable(cacheNames = "texts.rendered-posts", key = "#post.id")
-	public String render(final Post post) {
-		return postFilterChain.apply(post.toString(), baseUrl);
+	public String render(final PostEntity post) {
+		return postFilterChain.apply(post.getContent(), baseUrl);
 	}
+	*/
 }

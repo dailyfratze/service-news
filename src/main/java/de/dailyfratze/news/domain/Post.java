@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.dailyfratze.news.port.adapter.persistence.jpa;
+package de.dailyfratze.news.domain;
 
-import java.io.Serializable;
-import java.time.OffsetDateTime;
-import java.util.Objects;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
@@ -30,11 +33,12 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import java.io.Serializable;
+import java.time.OffsetDateTime;
+import java.util.Objects;
+import java.util.Optional;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import de.dailyfratze.news.domain.model.Post;
+import static de.dailyfratze.news.support.Strings.isNotBlank;
 
 /**
  * @author Michael J. Simons, 2018-05-31
@@ -45,7 +49,10 @@ import de.dailyfratze.news.domain.model.Post;
 	uniqueConstraints = @UniqueConstraint(name = "sn_posts_uk", columnNames = {"created_at", "created_by"}))
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class PostEntity implements Serializable {
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Getter
+@EqualsAndHashCode(of = {"createdAt", "createdBy"})
+public class Post implements Serializable {
 	private static final long serialVersionUID = 8762443218410015743L;
 
 	@Id
@@ -77,62 +84,15 @@ public class PostEntity implements Serializable {
 	@Column(name = "updated_by", nullable = false)
 	private String updatedBy;
 
-	PostEntity() {
-	}
-
 	/**
 	 * Creates a new post, updated* will be equal to created*
 	 * @param content
 	 * @param createdAt
 	 * @param createdBy
 	 */
-	public PostEntity(final String content, final OffsetDateTime createdAt, final String createdBy) {
-		this.content = content;
-		this.createdAt = this.updatedAt = createdAt;
-		this.createdBy = this.updatedBy = createdBy;
-	}
-
-	public void updateWith(final Post post) {
-		this.content = post.getContent();
-		this.updatedAt = post.getUpdatedAt().toOffsetDateTime();
-		this.updatedBy = post.getUpdatedBy();
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public OffsetDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public OffsetDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public String getUpdatedBy() {
-		return updatedBy;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (!(o instanceof PostEntity)) {
-			return false;
-		}
-		final PostEntity that = (PostEntity) o;
-		return Objects.equals(createdAt, that.createdAt) &&
-				Objects.equals(createdBy, that.createdBy);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(createdAt, createdBy);
+	Post(final String content, final OffsetDateTime createdAt, final String createdBy) {
+		this.content = Objects.requireNonNull(Optional.ofNullable(content).map(String::trim).filter(isNotBlank).orElse(null), "A post requires some content.");
+		this.createdAt = this.updatedAt = Objects.requireNonNull(createdAt, "A post requires a creation date.");
+		this.createdBy = this.updatedBy = Objects.requireNonNull(Optional.ofNullable(content).map(String::trim).filter(isNotBlank).orElse(null), "A post requires a creator.");
 	}
 }

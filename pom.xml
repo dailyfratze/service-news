@@ -42,9 +42,10 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<java.version>10</java.version>
-		<junit-platform.version>1.2.0</junit-platform.version>
 		<java-autolinker.version>0.2.1</java-autolinker.version>
 		<java-oembed.version>0.6.2</java-oembed.version>
+		<junit-platform.version>1.2.0</junit-platform.version>
+		<lombok.version>1.18.0</lombok.version>
 	</properties>
 
 	<dependencies>
@@ -87,10 +88,6 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
 		</dependency>
@@ -112,6 +109,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
 		<dependency>

@@ -15,12 +15,14 @@
  */
 package de.dailyfratze.news;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
 
-import de.dailyfratze.news.config.NewsServiceProperties;
+import java.time.ZoneId;
 
 /**
  * @author Michael J. Simons, 2018-05-31
@@ -28,7 +30,15 @@ import de.dailyfratze.news.config.NewsServiceProperties;
 @SpringBootApplication
 @EnableConfigurationProperties(NewsServiceProperties.class)
 @EnableCaching
+@RequiredArgsConstructor
 public class NewsServiceApplication {
+
+	private final NewsServiceProperties properties;
+
+	@Bean
+	public ZoneId targetTimeZone() {
+		return this.properties.getTargetTimeZone();
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(NewsServiceApplication.class, args);

@@ -18,6 +18,7 @@ package de.dailyfratze.news.config;
 import java.io.IOException;
 import java.util.List;
 
+import de.dailyfratze.news.NewsServiceProperties;
 import org.apache.http.client.HttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,8 +33,8 @@ import ac.simons.oembed.OembedService;
 import de.dailyfratze.commons.text.SmileyFilter;
 import de.dailyfratze.commons.text.TextFilter;
 import de.dailyfratze.commons.text.TextileFilter;
-import de.dailyfratze.news.config.NewsServiceProperties.AutoLinkerProperties;
-import de.dailyfratze.news.config.NewsServiceProperties.OembedProperties;
+import de.dailyfratze.news.NewsServiceProperties.AutoLinkerProperties;
+import de.dailyfratze.news.NewsServiceProperties.OembedProperties;
 import net.sf.ehcache.CacheManager;
 
 /**

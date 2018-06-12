@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.dailyfratze.news.application;
+package de.dailyfratze.news.app;
 
 /**
  * @author Michael J. Simons, 2018-05-31
