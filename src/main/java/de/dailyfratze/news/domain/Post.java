@@ -93,6 +93,6 @@ public class Post implements Serializable {
 	Post(final String content, final OffsetDateTime createdAt, final String createdBy) {
 		this.content = Objects.requireNonNull(Optional.ofNullable(content).map(String::trim).filter(isNotBlank).orElse(null), "A post requires some content.");
 		this.createdAt = this.updatedAt = Objects.requireNonNull(createdAt, "A post requires a creation date.");
-		this.createdBy = this.updatedBy = Objects.requireNonNull(Optional.ofNullable(content).map(String::trim).filter(isNotBlank).orElse(null), "A post requires a creator.");
+		this.createdBy = this.updatedBy = Objects.requireNonNull(Optional.ofNullable(createdBy).map(String::trim).filter(isNotBlank).orElse(null), "A post requires a creator.");
 	}
 }

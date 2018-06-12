@@ -37,5 +37,9 @@ public final class FetchPostsCommand {
 	 * Optional id of the last post that was fetched. If set, seek to that post and return {@link #numberToFetch}-posts
 	 * from there on.
 	 */
-	private final Optional<Post> seekTo;
+	private final Post seekTo;
+
+	public Optional<Post> getSeekTo() {
+		return Optional.ofNullable(seekTo);
+	}
 }

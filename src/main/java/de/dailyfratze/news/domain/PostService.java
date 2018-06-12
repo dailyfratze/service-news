@@ -16,6 +16,7 @@
 package de.dailyfratze.news.domain;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
@@ -38,7 +39,7 @@ public class PostService {
 		return Optional.ofNullable(id).flatMap(this.postRepository::findById);
 	}
 
-	public List<Post> fetchPosts(final int numberToFetch, final Post seekTo) {
-		return this.postRepository.findAll(numberToFetch, null, null);
+	public List<Post> fetchPosts(final int numberToFetch, @Nullable final Post seekTo) {
+		return this.postRepository.findAll(numberToFetch,  seekTo);
 	}
 }

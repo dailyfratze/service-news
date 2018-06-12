@@ -15,7 +15,6 @@
  */
 package de.dailyfratze.news.app;
 
-import de.dailyfratze.news.domain.Post;
 import de.dailyfratze.news.domain.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
-import java.util.Optional;
 
 import static lombok.AccessLevel.PACKAGE;
 
@@ -37,11 +35,7 @@ class PostController {
 	private final PostService postService;
 
 	@GetMapping({"", "/", "/news"})
-	public ModelAndView index(final FetchPostsCommand fetchPosts, Optional<Post> post) {
-		System.out.println(fetchPosts);
-		System.out.println("post " + post);
-		postService.fetchPosts(23, null);
-		// Map.of("posts", this.postService.fetchPosts(fetchPosts.orElseGet(() -> new FetchPostsCommand(5, null))))
-		return new ModelAndView("index", Map.of());
+	public ModelAndView index(final FetchPostsCommand fetchPosts) {
+		return new ModelAndView("index", Map.of("posts", this.postService.fetchPosts(fetchPosts.getNumberToFetch(), fetchPosts.getSeekTo().orElse(null))));
 	}
 }

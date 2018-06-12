@@ -49,11 +49,10 @@ interface PostRepositoryNativeExt {
 	 * Retrieves the last n posts in order by creation date.
 	 *
 	 * @param limit
-	 * @param createdAt
-	 * @param createdBy
+	 * @param seekTo
 	 * @return
 	 */
-	List<Post> findAll(int limit, @Nullable OffsetDateTime createdAt, @Nullable String createdBy);
+	List<Post> findAll(int limit, @Nullable Post seekTo);
 }
 
 @RequiredArgsConstructor(access = PACKAGE)
@@ -87,12 +86,11 @@ class PostRepositoryNativeExtImpl implements PostRepositoryNativeExt {
 	 * Wasted another 2 hours of my life for triviality.
 	 *
 	 * @param limit
-	 * @param createdAt
-	 * @param createdBy
+	 * @param seekTo
 	 * @return
 	 */
 	@Override
-	public List<Post> findAll(final int limit, @Nullable final OffsetDateTime createdAt, @Nullable final String createdBy) {
+	public List<Post> findAll(final int limit, @Nullable final Post seekTo) {
 		var sql = "SELECT * FROM sn_posts p "
 				+ " WHERE (CAST(:created_at AS timestamp with time zone) IS NULL AND :created_by IS NULL) "
 				+ "    OR (p.created_at, p.created_by) < (:created_at, :created_by) "
@@ -101,9 +99,10 @@ class PostRepositoryNativeExtImpl implements PostRepositoryNativeExt {
 
 		@SuppressWarnings("unchecked")
 		final Query<Post> query = entityManager.createNativeQuery(sql, Post.class).unwrap(Query.class);
+		var hlp = Optional.ofNullable(seekTo);
 		return query
-				.setParameter("created_at", createdAt, OffsetDateTimeType.INSTANCE)
-				.setParameter("created_by", createdBy, StringType.INSTANCE)
+				.setParameter("created_at", hlp.map(Post::getCreatedAt).orElse(null), OffsetDateTimeType.INSTANCE)
+				.setParameter("created_by", hlp.map(Post::getCreatedBy).orElse(null), StringType.INSTANCE)
 				.setParameter("limit", limit)
 				.getResultList();
 	}

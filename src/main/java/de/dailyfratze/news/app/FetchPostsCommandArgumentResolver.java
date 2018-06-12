@@ -24,7 +24,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 import static lombok.AccessLevel.PACKAGE;
 
@@ -38,6 +38,7 @@ import static lombok.AccessLevel.PACKAGE;
 class FetchPostsCommandArgumentResolver implements HandlerMethodArgumentResolver {
 
 	static final int DEFAULT_NUMBER_TO_FETCH = 5;
+	static final Post DEFAULT_POST = null;
 
 	private final PostService postService;
 
@@ -48,16 +49,16 @@ class FetchPostsCommandArgumentResolver implements HandlerMethodArgumentResolver
 
 	@Override
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-		var numberToFetch = Optional.<Integer>empty();
-		var seekTo = Optional.<Post>empty();
+		var numberToFetch = DEFAULT_NUMBER_TO_FETCH;
+		var seekTo = DEFAULT_POST;
 		try {
-			numberToFetch = Optional.ofNullable(webRequest.getParameter("numberToFetch")).map(Integer::parseInt);
+			numberToFetch = Integer.parseInt(webRequest.getParameter("numberToFetch"));
 		} catch(NumberFormatException e) {
 		}
 		try {
-			seekTo = Optional.ofNullable(webRequest.getParameter("seekTo")).map(Integer::parseInt).flatMap(postService::findById);
-		} catch(NumberFormatException e) {
+			seekTo = postService.findById(Integer.parseInt(webRequest.getParameter("seekTo"))).orElseThrow();
+		} catch(NumberFormatException | NoSuchElementException e) {
 		}
-		return new FetchPostsCommand(numberToFetch.orElse(DEFAULT_NUMBER_TO_FETCH), seekTo);
+		return new FetchPostsCommand(numberToFetch, seekTo);
 	}
 }
