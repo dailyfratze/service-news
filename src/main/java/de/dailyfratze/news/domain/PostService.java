@@ -18,6 +18,7 @@ package de.dailyfratze.news.domain;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZoneId;
 import java.util.List;
@@ -35,11 +36,13 @@ public class PostService {
 
 	private final PostRepository postRepository;
 
+	@Transactional(readOnly = true)
 	public Optional<Post> findById(final Integer id) {
 		return Optional.ofNullable(id).flatMap(this.postRepository::findById);
 	}
 
+	@Transactional(readOnly = true)
 	public List<Post> fetchPosts(final int numberToFetch, @Nullable final Post seekTo) {
-		return this.postRepository.findAll(numberToFetch,  seekTo);
+		return this.postRepository.findAll(numberToFetch, seekTo);
 	}
 }
