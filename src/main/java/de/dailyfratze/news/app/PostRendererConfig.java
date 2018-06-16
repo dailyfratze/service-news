@@ -13,17 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.dailyfratze.news.config;
-
-import java.io.IOException;
-import java.util.List;
-
-import de.dailyfratze.news.NewsServiceProperties;
-import org.apache.http.client.HttpClient;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
+package de.dailyfratze.news.app;
 
 import ac.simons.autolinker.AutoLinkService;
 import ac.simons.autolinker.EmailAddressAutoLinker;
@@ -33,9 +23,18 @@ import ac.simons.oembed.OembedService;
 import de.dailyfratze.commons.text.SmileyFilter;
 import de.dailyfratze.commons.text.TextFilter;
 import de.dailyfratze.commons.text.TextileFilter;
+import de.dailyfratze.news.NewsServiceProperties;
 import de.dailyfratze.news.NewsServiceProperties.AutoLinkerProperties;
 import de.dailyfratze.news.NewsServiceProperties.OembedProperties;
 import net.sf.ehcache.CacheManager;
+import org.apache.http.client.HttpClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Michael J. Simons, 2018-05-31
@@ -46,29 +45,35 @@ class PostRendererConfig {
 	AutoLinkService autoLinkService(final NewsServiceProperties newsServiceProperties) {
 		final AutoLinkerProperties config = newsServiceProperties.getAutoLinker();
 		return new AutoLinkService(List.of(
-				new EmailAddressAutoLinker(config.isHexEncodeEmailAddress(), config.isObfuscateEmailAddress()),
-				new TwitterUserAutoLinker(),
-				new UrlAutoLinker(config.getMaxLabelLength())
+			new EmailAddressAutoLinker(config.isHexEncodeEmailAddress(), config.isObfuscateEmailAddress()),
+			new TwitterUserAutoLinker(),
+			new UrlAutoLinker(config.getMaxLabelLength())
 		));
 	}
 
 	@Bean
-	OembedService oembedService(final NewsServiceProperties newsServiceProperties, final HttpClient httpClient, final CacheManager cacheManager) {
+	OembedService oembedService(
+		final NewsServiceProperties newsServiceProperties,
+		final HttpClient httpClient,
+		final CacheManager cacheManager) {
 		final OembedProperties config = newsServiceProperties.getOembed();
 		final OembedService oembedService = new OembedService(httpClient, cacheManager, config.getEndpoints(), "dailyfratze");
 		oembedService.setAutodiscovery(config.isAutodiscovery());
-
-		config.getCacheName().ifPresent(oembedService::setCacheName);
-		config.getDefaultCacheAge().ifPresent(oembedService::setDefaultCacheAge);
+		if (config.getCacheName() != null) {
+			oembedService.setCacheName(config.getCacheName());
+		}
+		if (config.getDefaultCacheAge() != null) {
+			oembedService.setDefaultCacheAge(config.getDefaultCacheAge());
+		}
 		return oembedService;
 	}
 
 	@Bean
 	TextFilter postFilterChain(
-			final NewsServiceProperties newsServiceProperties,
-			final ResourceLoader resourceLoader,
-			final AutoLinkService autoLinkService,
-			final OembedService oembedService
+		final NewsServiceProperties newsServiceProperties,
+		final ResourceLoader resourceLoader,
+		final AutoLinkService autoLinkService,
+		final OembedService oembedService
 	) throws IOException {
 		final String smileyPack = newsServiceProperties.getPostRenderer().getSmileyPack();
 		final Resource resource = resourceLoader.getResource(String.format("classpath:/smilies/%s.pak", smileyPack));
@@ -80,9 +85,17 @@ class PostRendererConfig {
 		final TextFilter textileFilter = new TextileFilter();
 
 		return (in, baseUrl) -> smileyFilter
-				.andThen(s -> textileFilter.apply(s, baseUrl))
-				.andThen(s -> autoLinkService.addLinks(s, baseUrl))
-				.andThen(s -> oembedService.embedUrls(s, baseUrl))
-				.apply(in, baseUrl);
+			.andThen(s -> textileFilter.apply(s, baseUrl))
+			.andThen(s -> autoLinkService.addLinks(s, baseUrl))
+			.andThen(s -> oembedService.embedUrls(s, baseUrl))
+			.apply(in, baseUrl);
+	}
+
+	@Bean
+	PostRenderer postRenderer(
+		final TextFilter postFilterChain,
+		final NewsServiceProperties newsServiceProperties
+	) {
+		return new PostRenderer(postFilterChain, newsServiceProperties.getBaseURL());
 	}
 }

@@ -13,26 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.dailyfratze.news.app;
+package de.dailyfratze.news.app.thymeleaf;
 
-import de.dailyfratze.commons.text.TextFilter;
-import de.dailyfratze.news.app.thymeleaf.ContentRenderer;
-import de.dailyfratze.news.domain.Post;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
+import org.thymeleaf.dialect.IProcessorDialect;
+import org.thymeleaf.processor.IProcessor;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
- * @author Michael J. Simons, 2018-05-31
+ * @author Michael J. Simons, 2018-07-16
  */
 @RequiredArgsConstructor
-class PostRenderer implements ContentRenderer<Post> {
-	private final TextFilter postFilterChain;
-
-	private final String baseUrl;
+public class DailyFratzeDialect implements IProcessorDialect {
+	private final Map<String, ContentRenderer> renderer;
 
 	@Override
-	@Cacheable(cacheNames = "texts.rendered-posts", key = "#post.id")
-	public String render(final Post post) {
-		return postFilterChain.apply(post.getContent(), baseUrl);
+	public String getPrefix() {
+		return "df";
+	}
+
+	@Override
+	public int getDialectProcessorPrecedence() {
+		return 1000;
+	}
+
+	@Override
+	public Set<IProcessor> getProcessors(String s) {
+		return Set.of(new ContentRendererBasedProcessor(s, renderer));
+	}
+
+	@Override
+	public String getName() {
+		return this.getClass().getName();
 	}
 }

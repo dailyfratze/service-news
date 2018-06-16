@@ -33,15 +33,15 @@ limitations under the License.
 
 	<cache name="texts.with-embedded-urls"
 		   maxBytesLocalHeap="4M"
-		   timeToIdleSeconds="60"
+		   timeToIdleSeconds="3600"
 		   statistics="true"
 	>
 		<persistence strategy="none" />
 	</cache>
 
 	<cache name="texts.rendered-posts"
-		   maxBytesLocalHeap="4M"
-		   timeToIdleSeconds="3600"
+		   maxBytesLocalHeap="1M"
+		   timeToIdleSeconds="60"
 		   statistics="true"
 	>
 		<persistence strategy="none" />

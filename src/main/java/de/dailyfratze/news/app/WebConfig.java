@@ -15,6 +15,8 @@
  */
 package de.dailyfratze.news.app;
 
+import de.dailyfratze.news.app.thymeleaf.ContentRenderer;
+import de.dailyfratze.news.app.thymeleaf.DailyFratzeDialect;
 import de.dailyfratze.news.domain.PostService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +24,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Michael J. Simons, 2018-06-12
@@ -36,5 +39,10 @@ public class WebConfig {
 				resolvers.add(new FetchPostsCommandArgumentResolver(postService));
 			}
 		};
+	}
+
+	@Bean
+	public DailyFratzeDialect dailyFratzeDialect(final Map<String, ContentRenderer> renderer) {
+		return new DailyFratzeDialect(renderer);
 	}
 }

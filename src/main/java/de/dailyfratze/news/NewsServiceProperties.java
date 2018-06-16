@@ -15,16 +15,14 @@
  */
 package de.dailyfratze.news;
 
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
+import ac.simons.oembed.OembedEndpoint;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import ac.simons.oembed.OembedEndpoint;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Michael J. Simons, 2018-05-31
@@ -69,13 +67,13 @@ public class NewsServiceProperties {
 		 * The name of the cached used by this service. Defaults to
 		 * "ac.simons.oembed.OembedService".
 		 */
-		private Optional<String> cacheName = Optional.empty();
+		private String cacheName = null;
 
 		/**
 		 * Time in seconds responses are cached. Used if the response has no
 		 * cache_age, defaults to 3600 (one hour).
 		 */
-		private Optional<Integer> defaultCacheAge = Optional.empty();
+		private Integer defaultCacheAge = null;
 
 	}
 
@@ -90,7 +88,7 @@ public class NewsServiceProperties {
 
 	}
 
-	private Optional<String> baseURL = Optional.empty();
+	private String baseURL = null;
 
 	private PostRendererProperties postRenderer = new PostRendererProperties();
 
