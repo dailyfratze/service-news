@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import ac.simons.oembed.OembedEndpoint;
@@ -27,23 +29,19 @@ import ac.simons.oembed.OembedEndpoint;
 /**
  * @author Michael J. Simons, 2018-05-31
  */
+@Setter
+@Getter
 @ConfigurationProperties(prefix = "news-service")
 public class NewsServiceProperties {
 
-	private Optional<String> baseURL;
-
+	@Setter
+	@Getter
 	public static class PostRendererProperties {
 		private String smileyPack = "standard2.0";
-
-		public String getSmileyPack() {
-			return smileyPack;
-		}
-
-		public void setSmileyPack(String smileyPack) {
-			this.smileyPack = smileyPack;
-		}
 	}
 
+	@Setter
+	@Getter
 	public static class AutoLinkerProperties {
 		private boolean hexEncodeEmailAddress = true;
 
@@ -51,31 +49,10 @@ public class NewsServiceProperties {
 
 		private int maxLabelLength = 30;
 
-		public boolean isHexEncodeEmailAddress() {
-			return hexEncodeEmailAddress;
-		}
-
-		public void setHexEncodeEmailAddress(boolean hexEncodeEmailAddress) {
-			this.hexEncodeEmailAddress = hexEncodeEmailAddress;
-		}
-
-		public boolean isObfuscateEmailAddress() {
-			return obfuscateEmailAddress;
-		}
-
-		public void setObfuscateEmailAddress(boolean obfuscateEmailAddress) {
-			this.obfuscateEmailAddress = obfuscateEmailAddress;
-		}
-
-		public int getMaxLabelLength() {
-			return maxLabelLength;
-		}
-
-		public void setMaxLabelLength(int maxLabelLength) {
-			this.maxLabelLength = maxLabelLength;
-		}
 	}
 
+	@Getter
+	@Setter
 	public static class OembedProperties {
 		/**
 		 * The list of configured endpoints.
@@ -100,39 +77,10 @@ public class NewsServiceProperties {
 		 */
 		private Optional<Integer> defaultCacheAge = Optional.empty();
 
-		public List<OembedEndpoint> getEndpoints() {
-			return endpoints;
-		}
-
-		public void setEndpoints(List<OembedEndpoint> endpoints) {
-			this.endpoints = endpoints;
-		}
-
-		public boolean isAutodiscovery() {
-			return autodiscovery;
-		}
-
-		public void setAutodiscovery(boolean autodiscovery) {
-			this.autodiscovery = autodiscovery;
-		}
-
-		public Optional<String> getCacheName() {
-			return cacheName;
-		}
-
-		public void setCacheName(Optional<String> cacheName) {
-			this.cacheName = cacheName;
-		}
-
-		public Optional<Integer> getDefaultCacheAge() {
-			return defaultCacheAge;
-		}
-
-		public void setDefaultCacheAge(Optional<Integer> defaultCacheAge) {
-			this.defaultCacheAge = defaultCacheAge;
-		}
 	}
 
+	@Setter
+	@Getter
 	public static class HttpClientProperties {
 		/**
 		 * A flag wether the <em>Daily Fratze</em> wide http client should ignore
@@ -140,14 +88,9 @@ public class NewsServiceProperties {
 		 */
 		private boolean ignoreCookies = false;
 
-		public boolean isIgnoreCookies() {
-			return ignoreCookies;
-		}
-
-		public void setIgnoreCookies(boolean ignoreCookies) {
-			this.ignoreCookies = ignoreCookies;
-		}
 	}
+
+	private Optional<String> baseURL = Optional.empty();
 
 	private PostRendererProperties postRenderer = new PostRendererProperties();
 
@@ -162,52 +105,4 @@ public class NewsServiceProperties {
 	 * zone stuff is presented to the user.
 	 */
 	private ZoneId targetTimeZone = ZoneId.of("Europe/Berlin");
-
-	public Optional<String> getBaseURL() {
-		return baseURL;
-	}
-
-	public void setBaseURL(Optional<String> baseURL) {
-		this.baseURL = baseURL;
-	}
-
-	public PostRendererProperties getPostRenderer() {
-		return postRenderer;
-	}
-
-	public void setPostRenderer(PostRendererProperties postRenderer) {
-		this.postRenderer = postRenderer;
-	}
-
-	public AutoLinkerProperties getAutoLinker() {
-		return autoLinker;
-	}
-
-	public void setAutoLinker(AutoLinkerProperties autoLinker) {
-		this.autoLinker = autoLinker;
-	}
-
-	public OembedProperties getOembed() {
-		return oembed;
-	}
-
-	public void setOembed(OembedProperties oembed) {
-		this.oembed = oembed;
-	}
-
-	public HttpClientProperties getHttpClient() {
-		return httpClient;
-	}
-
-	public void setHttpClient(HttpClientProperties httpClient) {
-		this.httpClient = httpClient;
-	}
-
-	public ZoneId getTargetTimeZone() {
-		return targetTimeZone;
-	}
-
-	public void setTargetTimeZone(ZoneId targetTimeZone) {
-		this.targetTimeZone = targetTimeZone;
-	}
 }
