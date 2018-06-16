@@ -19,6 +19,7 @@ import de.dailyfratze.news.domain.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
@@ -34,8 +35,13 @@ class PostController {
 
 	private final PostService postService;
 
-	@GetMapping({"", "/", "/news"})
+	@GetMapping({"", "/"})
 	public ModelAndView index(final FetchPostsCommand fetchPosts) {
 		return new ModelAndView("index", Map.of("posts", this.postService.fetchPosts(fetchPosts.getNumberToFetch(), fetchPosts.getSeekTo().orElse(null))));
+	}
+
+	@GetMapping("/{id:\\d+}")
+	public ModelAndView singlePost(@PathVariable final int id) {
+		return new ModelAndView("single_post", Map.of("posts", this.postService.fetchPosts(fetchPosts.getNumberToFetch(), fetchPosts.getSeekTo().orElse(null))));
 	}
 }
