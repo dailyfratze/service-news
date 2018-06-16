@@ -42,6 +42,6 @@ class PostController {
 
 	@GetMapping("/{id:\\d+}")
 	public ModelAndView singlePost(@PathVariable final int id) {
-		return new ModelAndView("single_post", Map.of("posts", this.postService.fetchPosts(fetchPosts.getNumberToFetch(), fetchPosts.getSeekTo().orElse(null))));
+		return new ModelAndView("single-post", Map.of("post", this.postService.findById(id).orElseThrow()));
 	}
 }
