@@ -44,8 +44,11 @@
 		<java.version>10</java.version>
 		<java-autolinker.version>0.3.1</java-autolinker.version>
 		<java-oembed.version>0.7.1</java-oembed.version>
-		<junit-platform.version>1.2.0</junit-platform.version>
 		<lombok.version>1.18.0</lombok.version>
+
+		<maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
+		<maven-failsafe-plugin.version>2.22.0</maven-failsafe-plugin.version>
+		<maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
 	</properties>
 
 	<dependencies>
@@ -147,6 +150,11 @@
 			<artifactId>junit-jupiter-api</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -182,18 +190,6 @@
 						<SPRING_PROFILES_ACTIVE>test</SPRING_PROFILES_ACTIVE>
 					</environmentVariables>
 				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.junit.platform</groupId>
-						<artifactId>junit-platform-surefire-provider</artifactId>
-						<version>${junit-platform.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.junit.jupiter</groupId>
-						<artifactId>junit-jupiter-engine</artifactId>
-						<version>${junit-jupiter.version}</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 			<plugin>
 				<artifactId>maven-failsafe-plugin</artifactId>
@@ -202,18 +198,6 @@
 						<SPRING_PROFILES_ACTIVE>test</SPRING_PROFILES_ACTIVE>
 					</environmentVariables>
 				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.junit.platform</groupId>
-						<artifactId>junit-platform-surefire-provider</artifactId>
-						<version>${junit-platform.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.junit.jupiter</groupId>
-						<artifactId>junit-jupiter-engine</artifactId>
-						<version>${junit-jupiter.version}</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
